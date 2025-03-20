@@ -2,34 +2,48 @@ namespace apbd3;
 
 public class Container
 {
-    public Container(double loadWeight, double height, double rawWeight, double depth, int id, double maxLoadWeight)
+    private static int _idCounter;
+    public Container(double height, double rawWeight, double depth, double maxLoadWeight)
     {
-        _loadWeight = loadWeight;
-        _height = height;
-        _rawWeight = rawWeight;
-        _depth = depth;
-        _id = id;
-        _maxLoadWeight = maxLoadWeight;
+        Height = height;
+        RawWeight = rawWeight;
+        Depth = depth;
+        Id = _idCounter++;
+        MaxLoadWeight = maxLoadWeight;
     }
 
-    protected  double _loadWeight;
-    protected  double _height;
-    protected  double _rawWeight;
-    protected  double _depth;
-    protected int _id;
-    
-    private double _maxLoadWeight;
+    protected double LoadWeight;
+    protected double Height;
+    protected double RawWeight;
+    protected double Depth;
+    protected int Id;
+    protected Type? type;
+    protected double MaxLoadWeight;
 
     public virtual void Unload()
     {
-        _loadWeight = 0.0;
+        LoadWeight = 0.0;
     }
 
     public virtual void Load(Product product)
     {
-        _loadWeight += product._weight;
-        if(_loadWeight + _rawWeight > _maxLoadWeight)
-            throw new OverFillException();
+        if(LoadWeight + product.Weight> MaxLoadWeight)
+            throw new OverFillException("load weight overflow");
+        LoadWeight += product.Weight;
     }
 
+    public string GetId()
+    {
+        return "KON-"+type+"-"+Id;
+    }
+
+    public override string ToString()
+    {
+        return GetId()+", raw weight: "+RawWeight+", load weight: "+LoadWeight+", depth: "+Depth+", height: "+Height;
+    }
+
+    public double TotalTonsWeight()
+    {
+        return (LoadWeight + RawWeight) / 1000.0;
+    }
 }

@@ -2,28 +2,29 @@ namespace apbd3;
 
 public class ContainerC : Container
 {
-    private string? _typeOfProduct;
+    string _typeOfCarriage;
     private double _temperature;
 
-    public ContainerC(double temperature, double loadWeight, double height, double rawWeight, double depth, int id, double maxLoadWeight)
-        : base(loadWeight, height, rawWeight, depth, id, maxLoadWeight)
+    public ContainerC(double height, double rawWeight, double depth, double maxLoadWeight,double temperature,string? typeOfCarriage= null)
+        : base(height, rawWeight, depth, maxLoadWeight)
     {
         _temperature = temperature;
+        _typeOfCarriage = typeOfCarriage;
+        type = Type.C;
     }
 
     public override void Load(Product product)
     {
-        if(_typeOfProduct == null)
-            _typeOfProduct = product._type;
-        if(_temperature < product._temperature)
+        _typeOfCarriage ??= product.Name;
+        if(_typeOfCarriage != product.Name)
+            throw new Exception("Container must have same type of product");
+        if(_temperature < product.Temperature)
             throw new Exception("Temperature too low");
-        if(_typeOfProduct != product._type)
-            throw new Exception("Cointainer must have same type of product");
         base.Load(product);
     }
-    
-    public string Id()
+
+    public override string ToString()
     {
-        return "KON-C-" + _id;
+        return base.ToString()+", temperature: "+_temperature+ (_typeOfCarriage!=null?", type of carriage: "+_typeOfCarriage:"");
     }
 }

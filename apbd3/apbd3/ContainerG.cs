@@ -4,25 +4,25 @@ public class ContainerG : Container, IHazardNotifier
 {
     private double _pressure;
 
-    public ContainerG(double pressure, double loadWeight, double height, double rawWeight, double depth, int id, double maxLoadWeight)
-        : base(loadWeight, height, rawWeight, depth, id, maxLoadWeight) // Call base constructor with the parameters
+    public ContainerG(double height, double rawWeight, double depth, double maxLoadWeight,double pressure)
+        : base(height, rawWeight, depth, maxLoadWeight)
     {
         _pressure = pressure;
+        type = Type.G;
     }
 
     public override void Unload()
     {
-        _loadWeight = 0.05 * _loadWeight;
+        LoadWeight = 0.05 * LoadWeight;
     }
     
-    public string Notify()
+    public void Notify()
     {
-        return "danger " + _id;
+        Console.WriteLine("danger "+GetId());
     }
 
-    public string Id()
+    public override string ToString()
     {
-        return "KON-G-" + _id;
+        return base.ToString()+", pressure: "+_pressure;
     }
-    
 }
